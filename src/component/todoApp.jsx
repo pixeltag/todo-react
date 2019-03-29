@@ -10,11 +10,59 @@ export default class todoApp extends Component {
     render() {
         return (
             <div className="my-3 p-3 bg-white rounded shadow-sm">
-                <h6 className="border-bottom border-gray pb-2 mb-0">Todo</h6>
-                <input type="text" className="form-control form-control-lg" value={this.state.newTodo} onChange={(event) => {this.addNewTodo(event)}} onKeyPress={(event) => {this.addNewTodo(event)}} placeholder="Enter New Todo" />
-                { this.state.todos.map(todo =>    <Todo key={todo.id} todo={todo} onComplete={this.handleComplete} />   ) }
+                <input type="text" className="new-todo-input" value={this.state.newTodo} onChange={(event) => {this.addNewTodo(event)}} onKeyPress={(event) => {this.addNewTodo(event)}} placeholder="New Todo" />
+                <ul>
+                    { this.state.todos.map(todo =>    <Todo key={todo.id} todo={todo} onComplete={this.handleComplete} />   ) }
+                </ul>
             </div>
         )
+    }
+
+
+    hydrateStateWithLocalStorage() {
+        // for all items in state
+        for (let key in this.state) {
+          // if the key exists in localStorage
+          if (localStorage.hasOwnProperty(key)) {
+            // get the key's value from localStorage
+            let value = localStorage.getItem(key);
+    
+            // parse the localStorage string and setState
+            try {
+              value = JSON.parse(value);
+              this.setState({ [key]: value });
+            } catch (e) {
+              // handle empty string
+              this.setState({ [key]: value });
+            }
+          }
+        }
+      }
+
+
+      saveStateToLocalStorage() {
+          // save to localStorage
+          localStorage.setItem("todos", JSON.stringify(this.state.todos));
+      }
+
+
+    componentDidMount() {
+        this.hydrateStateWithLocalStorage();
+        window.addEventListener(
+            "beforeunload",
+            this.saveStateToLocalStorage.bind(this)
+          );
+     }
+
+   
+    componentWillUnmount() {
+        window.removeEventListener(
+          "beforeunload",
+          this.saveStateToLocalStorage.bind(this)
+        );
+    
+        // saves if component has a chance to unmount
+        this.saveStateToLocalStorage();
     }
 
     // add new Todo
@@ -32,7 +80,8 @@ export default class todoApp extends Component {
                 const todos = [...this.state.todos];
                 todos.push(newTodo);
                 this.setState({todos , newTodo : ''})
-                
+                 // update localStorage
+                this.saveStateToLocalStorage();
             }
         } else {
             // handling on Change
@@ -45,12 +94,14 @@ export default class todoApp extends Component {
     handleComplete = (todo) => {
         let todos = this.state.todos.map( c => {
             if(c.id === todo) {
-                c.done = true;
+                c.done = !c.done;
                 return c; 
             }
             return c;
         });
         this.setState({todos});
+        this.saveStateToLocalStorage();
+
     }
 
     

@@ -1,12 +1,48 @@
-body {
-    background: #ededed;
-}
+@import './checbox';
+
+body{
+    background: #0070b6;
+    justify-content: center;
+    align-items: center;
+    font: 24px/1.4 "RobotoDraft", sans-serif;
+  }
 
 // completed todo 
 
 .completed-todo {
-    opacity: 0.5;
     h6 {
         text-decoration-line: line-through;
     }
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    li{
+        color: #AAAAAA;
+        position: relative;
+        width: 100%;
+        border-bottom: 1px solid #d3d3d3;
+        padding: 0 0.5em;
+        margin: 0;
+        }
+
+}
+
+
+.new-todo-input {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    font-size: 24px;
+    font-family: inherit;
+    font-weight: inherit;
+    outline: none;
+    line-height: 1.4em;
+    border: 0;
+    color: inherit;
+    padding: 15px;
+    border-bottom: 1px solid #999;
+    background: rgba(0, 0, 0, 0.003);
+    box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
 }
