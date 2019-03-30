@@ -12,7 +12,7 @@ export default class todoApp extends Component {
             <div className="my-3 p-3 bg-white rounded shadow-sm">
                 <input type="text" className="new-todo-input" value={this.state.newTodo} onChange={(event) => {this.addNewTodo(event)}} onKeyPress={(event) => {this.addNewTodo(event)}} placeholder="New Todo" />
                 <ul>
-                    { this.state.todos.map(todo =>    <Todo key={todo.id} todo={todo} onComplete={this.handleComplete} />   ) }
+                    { this.state.todos.map(todo =>    <Todo key={todo.id} todo={todo} onComplete={this.handleComplete} onDelete={this.handleDelete} />   ) }
                 </ul>
             </div>
         )
@@ -104,5 +104,12 @@ export default class todoApp extends Component {
 
     }
 
-    
+    handleDelete = (todo) => {
+        let todos = this.state.todos.filter( c => c.id !== todo ? c : false )
+        this.setState({todos});
+        this.saveStateToLocalStorage();
+    }
+
+
+    // end of class
 }
